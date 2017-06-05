@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nju.ar.mapper.yupiaoerInsert">
+
+ 	
+ <!-- 增加电影信息 -->  
+    <insert id="InsertMovie" parameterType="movie" 
+        useGeneratedKeys="true" keyProperty="id"> 
+        insert into yupiaoerMovie(name,type,last,score) values(#{name},#{type},#{last},#{score})
+     </insert>
+     
+ <!-- 增加电影院信息 -->  
+    <insert id="InsertCinema" parameterType="cinema" 
+        useGeneratedKeys="true" keyProperty="id"> 
+        insert into yupiaoerCinema(name,address) values(#{name},#{address})
+     </insert>
+     
+ <!-- 增加场次信息 -->
+ <insert id="InsertSession" parameterType="session"
+       useGeneratedKeys="true" keyProperty="id">
+       insert into yupiaoerSession(movieId,CinemaId,hall,date,startAt,endAt) values(#{m.id}，#{c.id},#{hall},#{date},#{startAt},#{endAt})
+       </insert>
+</mapper>
