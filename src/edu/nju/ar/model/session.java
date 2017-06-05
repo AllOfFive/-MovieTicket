@@ -2,24 +2,25 @@ package edu.nju.ar.model;
 
 public class session {
     int id;
-	cinema c;
-	movie m;
+	int cid;
+	int mid;
 	String hall;
 	String date;
 	String startAt;
 	String endAt;
 	double price;
-	public cinema getC() {
-		return c;
+
+	public int getCid() {
+		return cid;
 	}
-	public void setC(cinema c) {
-		this.c = c;
+	public void setCid(int cid) {
+		this.cid = cid;
 	}
-	public movie getM() {
-		return m;
+	public int getMid() {
+		return mid;
 	}
-	public void setM(movie m) {
-		this.m = m;
+	public void setMid(int mid) {
+		this.mid = mid;
 	}
 	public String getHall() {
 		return hall;
