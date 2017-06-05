@@ -30,7 +30,11 @@ public class ExtractDataFromYupiaoer {
 	 */
 	public static movie extractMovieInfo(String url) {
         Document doc = getDoc(url);
+        url = url.substring(7);
+        String[] urlArr = url.split("/");
+        int mid = Integer.parseInt(urlArr[2]);
         movie m = new movie();
+        m.setId(mid);
         Elements elements = doc.select("div.basic-info p span.name");
         m.setName(elements.get(0).text());
         elements = doc.select("span.c_cf616a, span.Score");
@@ -48,7 +52,10 @@ public class ExtractDataFromYupiaoer {
         elements = doc.select("div.basic-info p:eq(4)");
         String temp = elements.get(0).text();
         String[] arr = temp.split(" ");
-        m.setLast(Integer.parseInt(arr[2]));
+        int index2 = arr[2].indexOf("∑÷÷”");
+        String lastTime = arr[2].substring(0, index2);
+        m.setLast(Integer.parseInt(lastTime));
+        System.out.println(m.getId()+" "+m.getLast()+" "+m.getName()+" "+m.getScore()+" "+m.getType());
         return m;
 	}
 	
@@ -58,11 +65,16 @@ public class ExtractDataFromYupiaoer {
 	 */
 	public static cinema extractCinemaInfo(String url) {
         Document doc = getDoc(url);
+        url = url.substring(7);
+        String[] arr = url.split("/");
+        int cid = Integer.parseInt(arr[2]);
         cinema c = new cinema();
+        c.setId(cid);
         Elements es = doc.select("h3.info-name");
         c.setName(es.get(0).text());
         es = doc.select("p.info-addr");
         c.setAddress(es.get(0).text());
+        System.out.println(c.getId()+" "+c.getName()+" "+c.getAddress());
         return c;
 	}
 	
@@ -72,23 +84,8 @@ public class ExtractDataFromYupiaoer {
 	 */
 	public static List<session> extractMovieInfoForEachCinema(String url) {
 		Document doc = getDoc(url);
-		System.out.println("get doc ........");
 		List<session> sessions = new ArrayList<>();
-//        Elements es = doc.select("h3.info-name");
-//        c.setName(es.get(0).text());
-//        es = doc.select("p.info-addr ell");
-//        c.setAddress(es.get(0).text());
-//        
-//        es = doc.select("h4.movie-name");
-//        m.setName(es.get(0).text());
-//        es = doc.select("p.movie-label");
-//        String temp = es.get(0).text();
-//        String[] arr = temp.split(" / ");
-//        m.setType(arr[0]);
-//        int index = arr[2].indexOf("∑÷÷”");
-//        int last = Integer.parseInt(arr[2].substring(0, index));
-//        m.setLast(last);
-        System.out.println("url is "+url);
+        url = url.substring(7);
 		String[] urlArr = url.split("/");
 		String tempUrl = urlArr[2];
 		int index = tempUrl.indexOf("?movieId=");		
@@ -155,7 +152,7 @@ public class ExtractDataFromYupiaoer {
         	session.setHall(halls.get(i));
         	session.setPrice(Double.parseDouble(prices.get(i)));
         	sessions.add(session);
-//        	System.out.println(starts.get(i)+"  "+ends.get(i)+"  "+props.get(i)+"  "+halls.get(i)+"  "+prices.get(i));
+        	System.out.println(session.getStartAt()+"  "+session.getEndAt()+"  "+session.getDate()+"  "+session.getHall()+"  "+session.getPrice());
         }
         return sessions;
 	}
@@ -196,7 +193,8 @@ public class ExtractDataFromYupiaoer {
 	}
 
 	public static void main(String[] args) {
-//		extractMovieInfoForEachCinema("http://m.wepiao.com/cinemas/1011371?movieId=50205");
-		extractMovieInfo("http://m.wepiao.com/movies/50205");
+		extractMovieInfoForEachCinema("http://m.wepiao.com/cinemas/1011371?movieId=50205");
+//		extractMovieInfo("http://m.wepiao.com/movies/50205");
+//		extractCinemaInfo("http://m.wepiao.com/cinemas/1010147");
 	}
 }
