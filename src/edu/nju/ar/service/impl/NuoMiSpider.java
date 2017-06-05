@@ -57,9 +57,9 @@ public class NuoMiSpider {
 			for(Element data:results){
 				if(data.attr("data-movie-id").length()==0)
 					continue;
-				String url=BASE_URL+CINEMA_INFO_URL_PATH+cinemaId+"&movieId="+data.attr("data-movie-id");
+				String url="https://mdianying.baidu.com/cinema/detail?cinemaId="+cinemaId+"&movieId="+data.attr("data-movie-id");
 				urls.add(url);
-				
+				System.out.println(url);
 			}
 			
 			
