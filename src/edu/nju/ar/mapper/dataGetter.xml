@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nju.ar.mapper.dataGetter">
+	
+  
+ 	<select id="getAllYupiaoerMovie"  resultType="movie">
+ 		select * from yupiaoerMovie
+ 	</select>
+ 	
+    <select id="getAllTaopiaopiaoMovie"  resultType="movie">
+ 		select * from taopiaopiaoMovie
+ 	</select>
+ 	
+    <select id="getAllBaiduMovie"  resultType="movie">
+ 		select * from baiduMovie
+ 	</select> 
+
+ 	<select id="getAllYupiaoerCinema"  resultType="cinema">
+ 		select * from yupiaoerCinema
+ 	</select>
+ 	
+    <select id="getAllTaopiaopiaoCinema"  resultType="cinema">
+ 		select * from taopiaopiaoCinema
+ 	</select>
+ 	
+ 	<select id="getAllBaiduCinema"  resultType="cinema">
+ 		select * from baiduCinema
+ 	</select> 
+ 	
+ 	<select id="getAllYupiaoerSession"  resultType="session">
+ 		select * from yupiaoerSession
+ 	</select>
+ 	
+    <select id="getAllTaopiaopiaoSession"  resultType="session">
+ 		select * from taopiaopiaoSession
+ 	</select>
+ 	
+ 	<select id="getAllBaiduSession"  resultType="session">
+ 		select * from baiduSession
+ 	</select> 
+</mapper>
