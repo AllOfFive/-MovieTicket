@@ -16,13 +16,21 @@ public class DataIntegrator {
 	public dataGetter getter;
 	
 	public void generateBasicData(){
-		List<movie> basicMovie = getter.getAllYupiaoerMovie();
-		List<cinema> basicCinema = getter.getAllYupiaoerCinema();
-		List<session> basicSession = getter.getAllYupiaoerSession();
+		List<movie> yMovie = getter.getAllYupiaoerMovie();
+		List<cinema> yCinema = getter.getAllYupiaoerCinema();
+		List<session> ySession = getter.getAllYupiaoerSession();
+		
+		List<movie> bMovie = getter.getAllBaiduMovie();
+		List<cinema> bCinema = getter.getAllBaiduCinema();
+		List<session> bSession = getter.getAllBaiduSession();
+		
+		List<movie> tMovie = getter.getAllTaopiaopiaoMovie();
+		List<cinema> tCinema = getter.getAllTaopiaopiaoCinema();
+		List<session> tSession = getter.getAllTaopiaopiaoSession();
 	}
 	
-	public void mixBaiduData(){
-		
+	public double getAverageScore(int a,int b ,int c){
+		return 0;
 	}
 	
 	public static void main(String[] args) {

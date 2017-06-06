@@ -19,6 +19,6 @@
  <!-- 增加场次信息 -->
  <insert id="InsertSession" parameterType="session"
        useGeneratedKeys="true" keyProperty="id">
-       insert into yupiaoerSession(movieId,CinemaId,hall,date,startAt,endAt) values(#{m.id}，#{c.id},#{hall},#{date},#{startAt},#{endAt})
+       insert into yupiaoerSession(movieId,CinemaId,hall,date,startAt,endAt) values(#{mid}，#{cid},#{hall},#{date},#{startAt},#{endAt})
        </insert>
 </mapper>
