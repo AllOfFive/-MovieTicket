@@ -10,11 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import edu.nju.ar.model.Rule;
 import edu.nju.ar.model.UrlVO;
 
-
+@Service
 public class YuPiaoErSpider {
 
 	private static final String BASE_URL="http://m.wepiao.com";
@@ -35,7 +36,7 @@ public class YuPiaoErSpider {
 	
 	
 	/**
-	 * 获取所有url
+	 * 锟斤拷取锟斤拷锟斤拷url
 	 * @return
 	 */
 	public UrlVO getAllUrl(){
@@ -84,11 +85,11 @@ public class YuPiaoErSpider {
 	}
 	
 	/**
-	 * 获取正上映电影id
+	 * 锟斤拷取锟斤拷锟斤拷映锟斤拷影id
 	 * @return
 	 */
 	private List<String> getMovieIds(){
-		//获取电影的url
+		//锟斤拷取锟斤拷影锟斤拷url
 		Rule rule=new Rule(BASE_URL, null, null, MOVIE_URL_CSS_PATH, Rule.SELECTION, Rule.GET);
 		ExtractDataService tool=new ExtractDataService();
 		Elements results=tool.getElements(rule);
@@ -101,7 +102,7 @@ public class YuPiaoErSpider {
 	}
 	
 	/**
-	 * 根据电影id获取电影信息url
+	 * 锟斤拷锟捷碉拷影id锟斤拷取锟斤拷影锟斤拷息url
 	 * @param moviesId
 	 * @return
 	 */
@@ -116,7 +117,7 @@ public class YuPiaoErSpider {
 	}
 	
 	/**
-	 * 根据电影院id获取电影院信息url
+	 * 锟斤拷锟捷碉拷影院id锟斤拷取锟斤拷影院锟斤拷息url
 	 * @param cinemaIdSet
 	 * @return
 	 */
@@ -134,7 +135,7 @@ public class YuPiaoErSpider {
 	}
 	
 	/**
-	 * 根据电影id和电影院id获取购买电影url
+	 * 锟斤拷锟捷碉拷影id锟酵碉拷影院id锟斤拷取锟斤拷锟斤拷锟接皍rl
 	 * @param cinemaMovieMap
 	 * @return
 	 */

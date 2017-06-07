@@ -11,6 +11,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
@@ -20,24 +21,31 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import edu.nju.ar.model.cinema;
 import edu.nju.ar.model.movie;
 import edu.nju.ar.model.session;
+import edu.nju.ar.tools.FormatPrice;
+import edu.nju.ar.tools.GetDate;
 import edu.nju.ar.tools.MyJavaScriptEngine;
 
-
+@Service
 public class ExtractDataForNumMi {
 	/**
-	 * »ñÈ¡µçÓ°ÐÅÏ¢
+	 * movie information
 	 * @param url
 	 */
-	public static movie extractMovieInfo(String url) {
+	public movie extractMovieInfo(String url) {
         Document doc = getDoc(url);
         movie m = new movie();
         int index = url.lastIndexOf("=");
         int mid = Integer.parseInt(url.substring(index+1));
-        m.setId(mid);
+        m.setMovieId(mid);
         Elements elements = doc.select("span.list-name");
         m.setName(elements.get(0).text());
-        elements = doc.select("span.score-normal");
-        m.setScore(Double.parseDouble(elements.get(0).text()));
+        elements = doc.select("span.score-normal, dd.intrest");
+        String tempScore = elements.get(0).text();
+        if(tempScore.indexOf("æƒ³çœ‹")!=-1) {
+        	m.setScore(0);
+        } else {
+        	m.setScore(Double.parseDouble(elements.get(0).text()));
+        }
         elements = doc.select("p.detail:eq(1)");
         m.setType(elements.get(0).text().substring(3));
         elements = doc.select("p.movie-len");        
@@ -46,33 +54,33 @@ public class ExtractDataForNumMi {
     	Pattern pattern = Pattern.compile(regex);
     	Matcher matcher = pattern.matcher(temp);
         m.setLast(Integer.parseInt(matcher.replaceAll("").trim()));
-        System.out.println(m.getId()+" "+m.getLast()+" "+m.getName()+" "+m.getScore()+" "+m.getType());
+        System.out.println(m.getMovieId()+" "+m.getLast()+" "+m.getName()+" "+m.getScore()+" "+m.getType());
         return m;
 	}
 	
 	/**
-	 * »ñÈ¡µçÓ°ÔºÐÅÏ¢
+	 * cinema information 
 	 * @param url
 	 */
-	public static cinema extractCinemaInfo(String url) {
+	public cinema extractCinemaInfo(String url) {
         Document doc = getDoc(url);
         cinema c = new cinema();
         int index = url.lastIndexOf("=");
         int cid = Integer.parseInt(url.substring(index+1));
-        c.setId(cid);
+        c.setCinemaId(cid);
         Elements es = doc.select("span.cinema-name");
         c.setName(es.get(0).text());
         es = doc.select("p.address");
         c.setAddress(es.get(0).text());
-        System.out.println(c.getId()+" "+c.getName()+" "+c.getAddress());
+        System.out.println(c.getCinemaId()+" "+c.getName()+" "+c.getAddress());
         return c;
 	}
 	
 	/**
-	 * »ñÈ¡Ã¿¸öµçÓ°Ôºµ±ÌìÃ¿¸öµçÓ°µÄÆ±¼ÛÐÅÏ¢
+	 * session information
 	 * @param url
 	 */
-	public static List<session> extractMovieInfoForEachCinema(String url) {
+	public List<session> extractMovieInfoForEachCinema(String url) {
 		Document doc = getDoc(url);
 		List<session> sessions = new ArrayList<>();
 
@@ -83,24 +91,23 @@ public class ExtractDataForNumMi {
 		int mid = Integer.parseInt(url.substring(index3+1));
 		System.out.println(cid);
 		System.out.println(mid);
-        session session = new session();
-        session.setCid(cid);
-        session.setMid(mid);
-        Elements es = doc.select("li.active");
-        if(es.text()!=null) {
-        	String str  = es.text();
-        	String sub = str.substring(str.length()-5);
-        	session.setDate(sub);
-        }
+        
+		
+		Elements dateLi=doc.select("div.border-bottom li.active");
+		String dateStr=dateLi.get(0).text();
+		System.out.println(dateStr);
+		if(dateStr==null||!dateStr.contains("ä»Šå¤©"))
+			return sessions;
        
-		Elements results1 = doc.select("div.start");
+       String active="div.active ";
+		Elements results1 = doc.select(active+"div.start");
 		if(results1.size()==0) return null;
 		
-		Elements results2 = doc.select("div.end");
-		Elements results3 = doc.select("div.lan");
-		Elements results4 = doc.select("div.theater");
-		Elements results5 = doc.select("div.price");
-		Elements results6 = doc.select("div.price s");
+		Elements results2 = doc.select(active+"div.end");
+		Elements results3 = doc.select(active+"div.lan");
+		Elements results4 = doc.select(active+"div.theater");
+		Elements results5 = doc.select(active+"div.price");
+		Elements results6 = doc.select(active+"div.price s");
 		ArrayList<String> starts = new ArrayList<>();
 		ArrayList<String> ends = new ArrayList<>();
 		ArrayList<String> props = new ArrayList<>();
@@ -126,16 +133,13 @@ public class ExtractDataForNumMi {
         for (Element result4 : results4)  
         {            	
         	String temp = result4.text().replace(Jsoup.parse("&nbsp;").text(), "");
-        	if(temp.indexOf("³ä×ã")==-1)
+        	if(temp.indexOf("ä½™")==-1)
         		halls.add(temp);
         } 
         for (Element result5 : results5)  
         {            	
-        	String temp = result5.text();
-        	String regex="[^0-9]";
-        	Pattern pattern = Pattern.compile(regex);
-        	Matcher m = pattern.matcher(temp);   
-        	prices.add( m.replaceAll("").trim());
+        	String price = FormatPrice.formatPrice(result5.text());  
+        	prices.add(price);
         }       
         
         for(Element result6 : results6)
@@ -145,14 +149,20 @@ public class ExtractDataForNumMi {
         	rubs.add(temp);
         }
         for (int i=0;i<starts.size();i++) {
+        	session session = new session();
+            session.setCid(cid);
+            session.setMid(mid);
+            session.setDate(GetDate.getDateToday());
         	session.setStartAt(starts.get(i));
         	session.setEndAt(ends.get(i));
         	session.setHall(halls.get(i));
-        	if(rubs.get(i)!=null){
-        		int rubIndex = prices.get(i).indexOf(rubs.get(i));
-        		double truePrice = Double.parseDouble(prices.get(i).substring(0, rubIndex));
+        	if(rubs.size()!=0&&rubs.get(i)!=null&&rubs.get(i).length()!=0){
+        		int priceLength=prices.get(i).length()-rubs.get(i).length();
+        		double truePrice = Double.parseDouble(prices.get(i).substring(0,priceLength));
         		session.setPrice(truePrice);
-        	}        	
+        	}else {
+        		session.setPrice(Double.parseDouble(prices.get(i)));
+        	}
         	sessions.add(session);
         	System.out.println(session.getStartAt()+"  "+session.getEndAt()+"  "+session.getDate()+"  "+session.getHall()+"  "+session.getPrice());
         }
@@ -160,18 +170,18 @@ public class ExtractDataForNumMi {
 	}
 	
 	/**
-	 * »ñÈ¡url¶ÔÓ¦µÄdocument
+	 * get document
 	 * @param url
 	 * @return
 	 */
 	private static Document getDoc(String url){
 		WebClient webClient =new WebClient(BrowserVersion.INTERNET_EXPLORER);  
 //		WebClient webClient =new WebClient(BrowserVersion.CHROME); 
-		 webClient.getCookieManager().setCookiesEnabled(true);// ¿ªÆôcookie¹ÜÀí
-	       webClient.getOptions().setJavaScriptEnabled(true); //ÆôÓÃJS½âÊÍÆ÷£¬Ä¬ÈÏÎªtrue    
-	       webClient.getOptions().setCssEnabled(false); //½ûÓÃcssÖ§³Ö        
-	       webClient.getOptions().setThrowExceptionOnScriptError(false); //jsÔËÐÐ´íÎóÊ±£¬ÊÇ·ñÅ×³öÒì³£     
-	       webClient.setJavaScriptEngine(new MyJavaScriptEngine(webClient));//×Ô¶¨ÒåJavaScriptÒýÇæ£¬ÓÐjs´íÎó²»´òÓ¡
+		 webClient.getCookieManager().setCookiesEnabled(true);
+	       webClient.getOptions().setJavaScriptEnabled(true);    
+	       webClient.getOptions().setCssEnabled(false);         
+	       webClient.getOptions().setThrowExceptionOnScriptError(false);      
+	       webClient.setJavaScriptEngine(new MyJavaScriptEngine(webClient));
 	       webClient.getOptions().setTimeout(20000);        
 
 				HtmlPage page=null;
@@ -187,15 +197,16 @@ public class ExtractDataForNumMi {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}    
-				//ÎÒÈÏÎªÕâ¸ö×îÖØÒª  
-				       String pageXml = page.asXml(); //ÒÔxmlµÄÐÎÊ½»ñÈ¡ÏìÓ¦ÎÄ±¾    
-				/**jsoup½âÎöÎÄµµ*/    
+				 
+				       String pageXml = page.asXml(); 
+				
 			    Document doc = Jsoup.parse(pageXml, url); 
 			    return doc;
 	}
 
 	public static void main(String[] args) {
-		extractMovieInfoForEachCinema("https://mdianying.baidu.com/cinema/detail?cinemaId=179&movieId=15546");
+		ExtractDataForNumMi e = new ExtractDataForNumMi();
+		e.extractMovieInfoForEachCinema("https://mdianying.baidu.com/cinema/detail?cinemaId=3944&active_movie_id=15546");
 //		extractMovieInfo("https://mdianying.baidu.com/movie/detail?movieId=15546");
 //		extractCinemaInfo("https://mdianying.baidu.com/cinema/detail?cinemaId=179");
 	}

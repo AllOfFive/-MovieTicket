@@ -2,8 +2,15 @@ package edu.nju.ar.model;
 
 public class movie {
     int id;
+    int movieId;
 	String name;
 	String type;
+	public int getMovieId() {
+		return movieId;
+	}
+	public void setMovieId(int movieId) {
+		this.movieId = movieId;
+	}
 	int last;
 	double score;
 	public String getName() {
