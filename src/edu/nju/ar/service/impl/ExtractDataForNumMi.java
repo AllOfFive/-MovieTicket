@@ -150,8 +150,8 @@ public class ExtractDataForNumMi {
         }
         for (int i=0;i<starts.size();i++) {
         	session session = new session();
-            session.setCid(cid);
-            session.setMid(mid);
+            session.setCinemaId(cid);
+            session.setMovieId(mid);
             session.setDate(GetDate.getDateToday());
         	session.setStartAt(starts.get(i));
         	session.setEndAt(ends.get(i));
