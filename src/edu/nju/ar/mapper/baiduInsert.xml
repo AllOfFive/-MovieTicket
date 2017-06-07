@@ -19,6 +19,6 @@
  <!-- 增加场次信息 -->
  <insert id="InsertSession" parameterType="session"
        useGeneratedKeys="true" keyProperty="id">
-       insert into baiduSession(movieId,CinemaId,hall,date,startAt,endAt,price) values(#{mid},#{cid},#{hall},#{date},#{startAt},#{endAt},#{price})
+       insert into baiduSession(movieId,CinemaId,hall,date,startAt,endAt,price) values(#{movieId},#{cinemaId},#{hall},#{date},#{startAt},#{endAt},#{price})
        </insert>
 </mapper>

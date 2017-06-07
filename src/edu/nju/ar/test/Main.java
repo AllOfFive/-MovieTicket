@@ -21,8 +21,8 @@ public class Main {
 //		di.insertCinemaForYupiaoer();
 		
 		di.insertSessionForNuoMi();
-//		di.insertSessionForYupiaoer();
-//		di.insertMovieForNuoMi();
+		di.insertSessionForYupiaoer();
+		di.insertMovieForNuoMi();
 //		di.insertCinemaForNuoMi();
 		
 		System.out.println(".......");
