@@ -39,4 +39,36 @@
  	<select id="getAllBaiduSession"  resultType="session">
  		select * from baiduSession
  	</select> 
+ 	
+ 	<select id="getYupiaoerMovieByMid"  resultType="movie">
+ 		select * from yupiaoerMovie where movieId = #{mid}
+ 	</select>
+ 	
+ 	<select id="getTaopiaopiaoMovieByMid"  resultType="movie">
+ 		select * from taopiaopiaoMovie where movieId = #{mid}
+ 	</select>
+ 	
+ 	<select id="getBaiduMovieByMid"  resultType="movie">
+ 		select * from baiduMovie where movieId = #{mid}
+ 	</select>
+ 	
+ 	 	<select id="getYupiaoerCinemaByCid"  resultType="cinema">
+ 		select * from yupiaoerCinema where cinemaId = #{cid}
+ 	</select>
+ 	
+ 	<select id="getTaopiaopiaoCinemaByCid"  resultType="cinema">
+ 		select * from taopiaopiaoCinema where cinemaId = #{cid}
+ 	</select>
+ 	
+ 	<select id="getBaiduCinemaByCid"  resultType="cinema">
+ 		select * from baiduCinema where cinemaId = #{cid}
+ 	</select>
+ 	
+ 	<select id="getFinalMovieByName"  resultType="movie">
+ 		select * from finalMovie where name = #{0}
+ 	</select>
+ 	
+ 	<select id="getFinalCinemaByName"  resultType="cinema">
+ 		select * from finalCinema where name = #{0}
+ 	</select>
 </mapper>
