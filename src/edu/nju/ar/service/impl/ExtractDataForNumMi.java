@@ -14,7 +14,6 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
@@ -195,16 +194,10 @@ public class ExtractDataForNumMi {
 				HtmlPage page=null;
 				try {
 					page = webClient.getPage(url);
-				} catch (FailingHttpStatusCodeException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}    
+				} 
 				 
 				       String pageXml = page.asXml(); 
 				

@@ -110,6 +110,7 @@ public class DataIntegrator {
 						}
 			}
 			//此处缺少一个去重电影院的方法
+			if(getter.getFinalCinemaByName(c1.getName())==null)
 			integrator.addCinema(c1, yHas, tHas, bHas);
 			finalSession.setCinemaId(getter.getFinalCinemaByName(c1.getName()).getId());
 			integrator.addSession(finalSession, yPrice, tPrice, bPrice);
@@ -158,6 +159,7 @@ public class DataIntegrator {
 							break;
 						}
 			}
+			if(getter.getFinalCinemaByName(c1.getName())==null)
 			integrator.addCinema(c1, yHas, tHas, bHas);
 			finalSession.setCinemaId(getter.getFinalCinemaByName(c1.getName()).getId());
 			integrator.addSession(finalSession, yPrice, tPrice, bPrice);
@@ -206,6 +208,7 @@ public class DataIntegrator {
 									break;
 								}
 					}
+					if(getter.getFinalCinemaByName(c1.getName())==null)
 					integrator.addCinema(c1, yHas, tHas, bHas);
 					finalSession.setCinemaId(getter.getFinalCinemaByName(c1.getName()).getId());
 					integrator.addSession(finalSession, yPrice, tPrice, bPrice);
