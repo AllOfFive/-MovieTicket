@@ -12,8 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.nju.ar.model.CinemaInfo;
+import edu.nju.ar.model.Detail;
 import edu.nju.ar.model.MovieInfo;
-import edu.nju.ar.model.MovieResult;
 //import edu.nju.ar.service.SearchService;
 import edu.nju.ar.service.impl.SearchServiceImpl;
 
@@ -31,31 +32,42 @@ public class SearchController {
 		
 		String name=request.getParameter("movieName");
 		System.out.println(name);
-		List<MovieResult> movie=new ArrayList<MovieResult>();
-		movie=searchService.getResult(name);
-		System.out.println(movie.isEmpty());
-		MovieInfo movieInfo=new MovieInfo();
-		if(movie.isEmpty()){
-			movieInfo.setName("暂无");
-			movieInfo.setLast(0);
-			movieInfo.setScore(0);
-			movieInfo.setType("暂无");
-			
-		}else{
-			MovieResult item=movie.get(0);
-			movieInfo.setName(item.getName());
-			movieInfo.setLast(item.getLast());
-			movieInfo.setScore(getDouble2(item.getScore()));
-			movieInfo.setType(item.getType());
-		}
+		List<MovieInfo> movieList=new ArrayList<MovieInfo>();
+		movieList=searchService.getMovieList(name);
+		session.setAttribute("movieList", movieList);
 		
-		
-		
-		session.setAttribute("movieInfo", movieInfo);
-		session.setAttribute("movie", movie);
-        return "index";
+        return "movieList";
 		
 	}
+	@RequestMapping("/searchCinemaList")
+	public String searchMovieList(HttpServletRequest request,HttpSession session){
+		int id=Integer.parseInt(request.getParameter("movieId"));
+		session.setAttribute("movieId",id);
+		System.out.println(id);
+		List<CinemaInfo> cinemaList=new ArrayList<CinemaInfo>();
+		cinemaList=searchService.getCinemaList(id);
+		session.setAttribute("cinemaList", cinemaList);
+		return "cinemaList";
+	}
+	
+	@RequestMapping("/searchDetail")
+	public String searchDetail(HttpServletRequest request,HttpSession session){
+		int mid=Integer.parseInt(request.getParameter("movieId"));
+		int cid=Integer.parseInt(request.getParameter("cinemaId"));
+		MovieInfo movie=searchService.getMovieDetail(mid);
+		CinemaInfo cinema=searchService.getCinemaDetail(cid);
+		
+		session.setAttribute("movieDetail", movie);
+		session.setAttribute("cinemaDetail", cinema);
+		
+		List<Detail> detail=new ArrayList<>();
+		detail=searchService.getDetail(mid,cid);
+		session.setAttribute("detail", detail);
+		return "detail";
+		
+	}
+	
+	
 	
 	public static double getDouble2(double d){
 		DecimalFormat df = new DecimalFormat("0.00");

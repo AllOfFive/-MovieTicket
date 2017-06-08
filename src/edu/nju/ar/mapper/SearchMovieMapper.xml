@@ -13,9 +13,32 @@
  		where s.movieId=m.id and s.cinemaId=c.id and m.name=#{0}
  	</select>
  	
- 
+ <!-- 模糊查找名为name的电影的列表-->
+ 	<select id="searchMovieListByName" resultType="MovieInfo">
+ 		select * from finalMovie where name like "%"#{0}"%"
+ 	</select>
  	
+ 	
+ 	<!--查找上电影（id）的影院-->
+ 	<select id="searchCinemaListById" resultType="CinemaInfo">
+ 		select * from finalCinema where id in (select c.id from finalCinema c,
+ 		finalSession s where c.id=s.cinemaId and s.movieId=#{0})
+	</select>
+	
+	<!--根据电影id和影院id查找具体信息-->
+ 	<select id="searchDetailByMidAndCid" resultType="Detail">
+ 		select * from finalSession where movieId=#{0} and cinemaId=#{1}
+	</select>
+ 	
+ 	
+ 	<!--根据电影id找电影-->
+ 	<select id="searchMoiveById" resultType="MovieInfo">
+ 		select * from finalMovie where id=#{0}
+	</select>
+	
+	<!--根据电影id和影院id查找具体信息-->
+ 	<select id="searchCinemaById" resultType="CinemaInfo">
+ 		select * from finalCinema where id=#{0}
+	</select>
 
-  
- 
-</mapper>
+  </mapper>

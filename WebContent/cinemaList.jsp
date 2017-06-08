@@ -20,25 +20,54 @@
 <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
-<title>搜索</title>
+<title>电影列表</title>
 </head>
 <body style="font-family:微软雅黑;">
-<h1 style="text-align:center;margin-left:-50px">百度糯米,淘票票,娱票儿</h1>
-<h1 style="text-align:center;margin-left:-50px">三平台电影集成</h1>
-<div id="searchBox" style="margin-top:150px" class="col-lg-8 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" >
+<h3 style="text-align:center;margin-left:-50px">百度糯米,淘票票,娱票儿</h3>
+<div id="searchBox" style="margin-top:30px" class="col-lg-8 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" >
 	<form action="searchMoive" method="post" id="searchForm">
-		<input style="display:inline;width:320px" type="text" class="form-control" id="movieName" name="movieName" placeholder="搜电影/影院">  
+		<input style="display:inline;width:320px" type="text" class="form-control" id="movieName" name="movieName" placeholder="请输入电影名">  
     	<!-- <input style="display:inline;width:250px" type="date" class="form-control" id="movieDate" name="movieDate" placeholder="请选择时间">  
     	 -->
     	<button type="submit" id="search"  class="btn btn-primary btn-md" >搜索</button>
-    	
     	<!-- <input type="submit" id="sub" style="display:none"> -->
     </form>
 </div>
 
+<!-- 影院列表 -->
+<div id="movieListResult" style="margin-top:30px" class="col-lg-8 col-lg-offset-2 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" >
+<table style="margin-top:40px;text-align:left" class="table table-striped table-hover">
+    <caption>查询结果</caption>
+    <thead>
+      <tr>
+      	<th>名称</th>
+        <th>地址</th>
+        <th>详情</th>
+      </tr>
+    </thead>
+    <tbody>
+     <c:forEach items="${cinemaList}" var="el">
+    		<tr id="${el.id}">
+    			<td>${el.name}</td>
+    			<td>${el.address}</td>
+    			<td>
+    			<form action="searchDetail" method="post" id="searchDetailForm">
+					<input type="text" style="display:none" id="movieId" name="movieId" value=${movieId}>  
+    				<input type="text" style="display:none" id="cinemaId" name="cinemaId" value=${el.id}>  
+    				
+    				<button type="submit" class="btn btn-info btn-xs">详情</button>
+    			</form>
+    			</td>
+    			
+    		</tr>
+    	
+    </c:forEach>
+    </tbody>
+  </table>
 
 	
-
+	
+</div>
 	
 	
 	
