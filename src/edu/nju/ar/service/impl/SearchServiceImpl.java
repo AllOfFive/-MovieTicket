@@ -52,5 +52,15 @@ public class SearchServiceImpl{
 		// TODO Auto-generated method stub
 		return smm.searchCinemaById(cid);
 	}
+
+	public List<CinemaInfo> getCinemaListByName(String name) {
+		// TODO Auto-generated method stub
+		return smm.searchCinemaListByName(name);
+	}
+
+	public List<MovieInfo> getMovieListByCinemaId(int id) {
+		// TODO Auto-generated method stub
+		return smm.searchMovieListByCinemaId(id);
+	}
 	
 }

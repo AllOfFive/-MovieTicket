@@ -20,7 +20,7 @@
 <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
-<title>电影</title>
+<title>电影列表</title>
 </head>
 <body style="font-family:微软雅黑;">
 <h3 style="text-align:center;margin-left:-50px">百度糯米,淘票票,娱票儿</h3>
@@ -34,60 +34,44 @@
     </form>
 </div>
 
-
-	
-<div id="pingtai" style="margin-top:30px" class="col-lg-8 col-lg-offset-2 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" >
-<div id="movieInfo" style="padding:30px;background-color:#726DD1;margin: 0 auto;">
-	
-	
-	 <h1 style="text-align:center;color:white">${movieDetail.name}</h1>
-	 
-	 <br><br>
-	 <table style="text-align:center;color:white" class="col-lg-10 col-lg-offset-1 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
-		<td><span >综合评分：<span>${movieDetail.averageScore}</span>分</span></td>
-		<td><span >电影类型：<span>${movieDetail.type}</span></span></td>
-		<td >电影时长：<span></span>${movieDetail.last}</span>分钟</td>
-		
-	</table> 	
-	<br><br>
-	<!-- </div> -->
-	
-		
-	
-</div>
-<br>
-<br>
-<span style="float:left">${cinemaDetail.name}</span>
-<span style="float:right">${cinemaDetail.address }</span>
-
+<!-- 电影列表 -->
+<div id="movieListResult" style="margin-top:30px" class="col-lg-8 col-lg-offset-2 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" >
 <table style="margin-top:40px;text-align:left" class="table table-striped table-hover">
-    <caption ></caption>
+    <caption>电影查询结果</caption>
     <thead>
       <tr>
-        <th>影厅</th>
-        <th>开始时间</th>
-        <th>结束时间</th>
-        <th>糯米价格</th>
-        <th>淘票票价格</th>
-        <th>娱票儿价格</th>
-        
+      	<th>名称</th>
+        <th>类型</th>
+        <th>时长</th>
+        <th>评分</th>
+        <th>详情</th>
       </tr>
     </thead>
     <tbody>
-     <c:forEach items="${detail}" var="el">
-    		<tr>
-    			<td>${el.hall}</td>
-    			<td>${el.startAt}</td>
-    			<td>${el.endAt}</td>
-    			<td>${el.bPrice}</td>
-    			<td>${el.tPrice}</td>
-    			<td>${el.yPrice}</td>
+     <c:forEach items="${newMovieList}" var="el">
+    		<tr id="${el.id}">
+    			<td>${el.name}</td>
+    			<td>${el.type}</td>
+    			<td>${el.last}</td>
+    			<td>${el.averageScore}</td>
+    			<td>
+    			<form action="searchDetail" method="post" id="searchCinemaListForm">
+					<input type="text" style="display:none" id="movieId" name="movieId" value=${el.id}>  
+    				<input type="text" style="display:none" id="cinemaId" name="cinemaId" value=${newCinemaId}>  
+    				
+    				<button type="submit" class="btn btn-info btn-xs">详情</button>
+    			</form>
+    			</td>
+    			
     		</tr>
     	
     </c:forEach>
     </tbody>
   </table>
-</div>			
+
+	
+	
+</div>
 	
 	
 	

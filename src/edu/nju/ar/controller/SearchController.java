@@ -34,9 +34,17 @@ public class SearchController {
 		System.out.println(name);
 		List<MovieInfo> movieList=new ArrayList<MovieInfo>();
 		movieList=searchService.getMovieList(name);
-		session.setAttribute("movieList", movieList);
-		
-        return "movieList";
+//		session.setAttribute("movieList", movieList);
+//		return "movieList";
+		if(!movieList.isEmpty()){
+			session.setAttribute("movieList", movieList);
+			return "movieList";
+		}else{
+			List<CinemaInfo> cinemaList=new ArrayList<CinemaInfo>();
+			cinemaList=searchService.getCinemaListByName(name);
+			session.setAttribute("newCinemaList", cinemaList);
+			return "newCinemaList";
+		}
 		
 	}
 	@RequestMapping("/searchCinemaList")
@@ -54,6 +62,8 @@ public class SearchController {
 	public String searchDetail(HttpServletRequest request,HttpSession session){
 		int mid=Integer.parseInt(request.getParameter("movieId"));
 		int cid=Integer.parseInt(request.getParameter("cinemaId"));
+		System.out.println(mid+"!!!!!");
+		
 		MovieInfo movie=searchService.getMovieDetail(mid);
 		CinemaInfo cinema=searchService.getCinemaDetail(cid);
 		
@@ -67,7 +77,16 @@ public class SearchController {
 		
 	}
 	
-	
+	@RequestMapping("/searchMoviesInCinema")
+	public String searchMoviesInCinema(HttpServletRequest request,HttpSession session){
+		int id=Integer.parseInt(request.getParameter("cinemaId"));
+		session.setAttribute("newCinemaId",id);
+		System.out.println(id);
+		List<MovieInfo> movieList=new ArrayList<MovieInfo>();
+		movieList=searchService.getMovieListByCinemaId(id);
+		session.setAttribute("newMovieList", movieList);
+		return "newMovieList";
+	}
 	
 	public static double getDouble2(double d){
 		DecimalFormat df = new DecimalFormat("0.00");

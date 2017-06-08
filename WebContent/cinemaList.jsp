@@ -26,7 +26,7 @@
 <h3 style="text-align:center;margin-left:-50px">百度糯米,淘票票,娱票儿</h3>
 <div id="searchBox" style="margin-top:30px" class="col-lg-8 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" >
 	<form action="searchMoive" method="post" id="searchForm">
-		<input style="display:inline;width:320px" type="text" class="form-control" id="movieName" name="movieName" placeholder="请输入电影名">  
+		<input style="display:inline;width:320px" type="text" class="form-control" id="movieName" name="movieName" placeholder="搜电影/影院">  
     	<!-- <input style="display:inline;width:250px" type="date" class="form-control" id="movieDate" name="movieDate" placeholder="请选择时间">  
     	 -->
     	<button type="submit" id="search"  class="btn btn-primary btn-md" >搜索</button>
@@ -37,7 +37,7 @@
 <!-- 影院列表 -->
 <div id="movieListResult" style="margin-top:30px" class="col-lg-8 col-lg-offset-2 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" >
 <table style="margin-top:40px;text-align:left" class="table table-striped table-hover">
-    <caption>查询结果</caption>
+    <caption>影院查询结果</caption>
     <thead>
       <tr>
       	<th>名称</th>

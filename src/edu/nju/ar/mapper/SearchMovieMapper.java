@@ -19,4 +19,8 @@ public interface SearchMovieMapper {
 	public MovieInfo searchMoiveById(int mid);
 
 	public CinemaInfo searchCinemaById(int cid);
+
+	public List<CinemaInfo> searchCinemaListByName(String name);
+
+	public List<MovieInfo> searchMovieListByCinemaId(int id);
 }
