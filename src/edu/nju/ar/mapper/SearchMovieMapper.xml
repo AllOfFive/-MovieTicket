@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nju.ar.mapper.SearchMovieMapper">
+	
+  
+ <!-- 查询名为name的Movie-->
+ 	<select id="searchMovieByName" resultType="MovieResult">
+ 		select m.name as name,type,averageScore as score,last,c.name as cinema_name,
+ 		c.address as cinema_address,hall,date,startAt as start,endAt as end,
+ 		bPrice as noumi_price,tPrice as taopiaopiao_price,yPrice as yupiaoer_price
+ 		from finalSession s,finalMovie m,finalCinema c
+ 		where s.movieId=m.id and s.cinemaId=c.id and m.name=#{0}
+ 	</select>
+ 	
+ 
+ 	
+
+  
+ 
+</mapper>

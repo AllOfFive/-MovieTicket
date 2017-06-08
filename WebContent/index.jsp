@@ -24,23 +24,23 @@
 </head>
 <body style="font-family:微软雅黑;">
 <h3 style="text-align:center;margin-left:-50px">百度糯米,淘票票,娱票儿</h3>
-<div id="searchBox" style="margin-top:30px" class="col-lg-9 col-lg-offset-3 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" >
+<div id="searchBox" style="margin-top:30px" class="col-lg-8 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" >
 	<form action="searchMoive" method="post" id="searchForm">
-		<input style="display:inline;width:250px" type="text" class="form-control" id="movieName" name="movieName" placeholder="请输入电影名">  
-    	<input style="display:inline;width:250px" type="date" class="form-control" id="movieDate" name="movieDate" placeholder="请选择时间">  
-    	
-    	<button type="submit" id="search" onclick="movieSearch()" class="btn btn-primary btn-md" >搜索</button>
+		<input style="display:inline;width:320px" type="text" class="form-control" id="movieName" name="movieName" placeholder="请输入电影名">  
+    	<!-- <input style="display:inline;width:250px" type="date" class="form-control" id="movieDate" name="movieDate" placeholder="请选择时间">  
+    	 -->
+    	<button type="submit" id="search"  class="btn btn-primary btn-md" >搜索</button>
     	<!-- <input type="submit" id="sub" style="display:none"> -->
     </form>
 </div>
 
 
 	
-<div id="pingtai" style="margin-top:30px" class="col-lg-10 col-lg-offset-1 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" >
+<div id="pingtai" style="margin-top:30px" class="col-lg-12 col-lg-offset-0 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" >
 <div id="movieInfo" style="padding:30px;background-color:#726DD1;margin: 0 auto;">
 	
 	
-	 <h1 style="text-align:center;color:white">${movie.name}</h1>
+	 <h1 style="text-align:center;color:white">${movieInfo.name}</h1>
 	 
 	 <br><br>
 	<%-- <div style="color:white;width:200px">
@@ -53,9 +53,9 @@
 	 <table style="text-align:center;color:white" class="col-lg-10 col-lg-offset-1 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
 	
 	 	
-		<td><span >综合评分：<span>${movie.score}分</span></span></td>
-		<td><span >电影类型：<span>${movie.type}</span></span></td>
-		<td >电影时长：<span>${movie.last}</span>分钟</span></td>
+		<td><span >综合评分：<span>${movieInfo.score}</span>分</span></td>
+		<td><span >电影类型：<span>${movieInfo.type}</span></span></td>
+		<td >电影时长：<span></span>${movieInfo.last}</span>分钟</td>
 		
 	</table> 	
 	<br><br>
@@ -65,11 +65,12 @@
 	
 </div>
 <table style="margin-top:40px;text-align:left" class="table table-striped table-hover">
-    <caption>${date}</caption>
+    <caption></caption>
     <thead>
       <tr>
       	<th>影院</th>
         <th>地址</th>
+        <th>影厅</th>
         <th>开始时间</th>
         <th>结束时间</th>
         <th>糯米价格</th>
@@ -79,36 +80,19 @@
       </tr>
     </thead>
     <tbody>
-    <tr>
-    			<td>南京大美影院</td>
-    			<td>南京市鼓楼区XXX</td>
-    			
-    			<td>10:00</td>
-    			<td>12:00</td>
-    			<td>23.5</td>
-    			<td>32.6</td>
-    			<td>12</td>
-    			
-    		</tr>
+     <c:forEach items="${movie}" var="el">
     		<tr>
-    			<td>南京新街口影院</td>
-    			<td>南京市XXX</td>
-    			
-    			<td>10:00</td>
-    			<td>12:00</td>
-    			<td>23.5</td>
-    			<td>31.6</td>
-    			<td>14</td>
-    			
-    		</tr>
-    <%-- <c:forEach items="${OCELInfo}" var="el">
-    		<tr>
-    			<td>${el.date}</td>
-    			<td>${el.orderNum}</td>
-    			<td>${el.cancelNum}</td>
+    			<td>${el.cinema_name}</td>
+    			<td>${el.cinema_address}</td>
+    			<td>${el.hall}</td>
+    			<td>${el.start}</td>
+    			<td>${el.end}</td>
+    			<td>${el.noumi_price}</td>
+    			<td>${el.taopiaopiao_price}</td>
+    			<td>${el.yupiaoer_price}</td>
     		</tr>
     	
-    </c:forEach> --%>
+    </c:forEach>
     </tbody>
   </table>
 </div>			
