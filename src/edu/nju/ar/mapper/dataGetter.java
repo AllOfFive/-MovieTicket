@@ -41,4 +41,6 @@ public interface dataGetter {
 	public movie getFinalMovieByName(String name);
 	
 	public cinema getFinalCinemaByName(String name);
+	
+	public List<movie> getAllFinalMovie();
 }

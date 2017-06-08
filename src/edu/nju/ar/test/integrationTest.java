@@ -18,7 +18,7 @@ public class integrationTest{
 	public void test() {
 		System.out.println(".......");
 
-		di.generateMovieData();
+		//di.generateMovieData();
 		di.generateCinemaAndSessionData();
 
 		

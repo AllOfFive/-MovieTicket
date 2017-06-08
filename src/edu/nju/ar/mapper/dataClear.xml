@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nju.ar.mapper.dataClear">
+
+ 	
+    <delete id="clearYupiaoerMovie" >
+       delete from yupiaoerMovie
+     </delete>
+     
+      <delete id="clearYupiaoerCinema" >
+       delete from yupiaoerCinema
+     </delete>
+     
+      <delete id="clearYupiaoerSession" >
+       delete from yupiaoerSession
+     </delete>
+     
+      <delete id="clearBaiduMovie" >
+       delete from baiduMovie
+     </delete>
+     
+      <delete id="clearBaiduCinema" >
+       delete from baiduCinema
+     </delete>
+     
+      <delete id="clearBaiduSession" >
+       delete from baiduSession
+     </delete>
+     
+      <delete id="clearFinalMovie" >
+       delete from finalMovie
+     </delete>
+    
+      <delete id="clearFinalSession" >
+       delete from finalSession
+     </delete>
+     
+     </mapper>

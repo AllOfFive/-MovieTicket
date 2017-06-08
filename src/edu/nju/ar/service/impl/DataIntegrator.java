@@ -6,7 +6,6 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import edu.nju.ar.mapper.UserMapper;
 import edu.nju.ar.mapper.dataGetter;
 import edu.nju.ar.mapper.integration;
 import edu.nju.ar.model.cinema;
@@ -23,6 +22,7 @@ public class DataIntegrator {
 	private integration integrator;
 	
 	private Similarity s = new Similarity();
+	
 	
 	public void generateMovieData(){
 		List<movie> yMovie = getter.getAllYupiaoerMovie();
@@ -60,10 +60,16 @@ public class DataIntegrator {
 	}
 	
 
-	public void generateCinemaAndSessionData(){
-		List<session> ySession = getter.getAllYupiaoerSession();
-		List<session> tSession = getter.getAllTaopiaopiaoSession();
-		List<session> bSession = getter.getAllBaiduSession();
+	public void generateCinemaAndSessionData(){List<session> ySession = getter.getAllYupiaoerSession();
+	List<session> tSession = getter.getAllTaopiaopiaoSession();
+	List<session> bSession = getter.getAllBaiduSession();
+	List<movie> yMovie = getter.getAllYupiaoerMovie();
+	List<movie> bMovie = getter.getAllBaiduMovie();
+	List<movie> tMovie = getter.getAllTaopiaopiaoMovie();
+	List<cinema> yCinema = getter.getAllYupiaoerCinema();
+	List<cinema> bCinema = getter.getAllBaiduCinema();
+	List<cinema> tCinema = getter.getAllTaopiaopiaoCinema();
+		List<movie> finalMovie = getter.getAllFinalMovie();
 		//娱票儿有的场次和场次中出现的电影先加进去
 		for(session s1:ySession){
 			int yHas=1;
@@ -73,22 +79,17 @@ public class DataIntegrator {
 			double tPrice=0;
 			double bPrice=0;
 			session finalSession=new session();
-			cinema c1=getter.getYupiaoerCinemaByCid(s1.getCinemaId());
-			movie m1=getter.getYupiaoerMovieByMid(s1.getMovieId());
-			
-			System.out.println(s1.getHall());
-			System.out.println(s1.getDate());
-			System.out.println(c1.getName());
-			System.out.println(m1.getName());
+			cinema c1=getCinemaFromListById(yCinema,s1.getCinemaId());
+			movie m1=getMovieFromListById(yMovie,s1.getMovieId());
 			
 			finalSession.setHall(s1.getHall());
 			finalSession.setDate(s1.getDate());
 			finalSession.setStartAt(s1.getStartAt());
 			finalSession.setEndAt(s1.getEndAt());
-			finalSession.setMovieId(getter.getFinalMovieByName(m1.getName()).getId()); //movie信息已经集成，通过name获取finalMovie表中的id
+			finalSession.setMovieId(getMovieFromListByName(finalMovie,m1.getName()).getId()); //movie信息已经集成，通过name获取finalMovie表中的id
 			
 			for(session s2:tSession){
-				cinema c2 = getter.getTaopiaopiaoCinemaByCid(s2.getCinemaId());
+				cinema c2 = getCinemaFromTListById(tCinema,s2.getCinemaId());
 				if(s2.getDate().equals(s1.getDate())&&
 						s2.getStartAt().equals(s1.getStartAt())&&s2.getEndAt().equals(s1.getEndAt())
 						&&s.getSimilarityRatio(c1.getAddress(),c2.getAddress())>0.8){		
@@ -99,8 +100,7 @@ public class DataIntegrator {
 			}
 			
 			for(session s3:bSession){
-				cinema c3=getter.getBaiduCinemaByCid(s3.getCinemaId());
-				System.out.println(c3.getName());
+				cinema c3=getCinemaFromListById(bCinema,s3.getCinemaId());
 				if(s3.getDate().equals(s1.getDate())&&
 						s3.getStartAt().equals(s1.getStartAt())&&s3.getEndAt().equals(s1.getEndAt())
 						&&s.getSimilarityRatio(c1.getAddress(), c3.getAddress())>0.8){
@@ -109,11 +109,14 @@ public class DataIntegrator {
 							break;
 						}
 			}
-			//此处缺少一个去重电影院的方法
-			if(getter.getFinalCinemaByName(c1.getName())==null)
+			cinema finalCinema=getter.getFinalCinemaByName(c1.getName());
+  			if(finalCinema==null){
 			integrator.addCinema(c1, yHas, tHas, bHas);
-			finalSession.setCinemaId(getter.getFinalCinemaByName(c1.getName()).getId());
+			finalCinema=getter.getFinalCinemaByName(c1.getName());
+  			}
+			finalSession.setCinemaId(finalCinema.getId());
 			integrator.addSession(finalSession, yPrice, tPrice, bPrice);
+			System.out.println(finalCinema.getName());
 		}
 		
 		//娱票儿中没有的淘票票有的电影院和场次
@@ -124,19 +127,12 @@ public class DataIntegrator {
 			double yPrice=0;
 			double tPrice=s1.getPrice();
 			double bPrice=0;
-			session finalSession=new session();
-			cinema c1=getter.getTaopiaopiaoCinemaByCid(s1.getCinemaId());
-			movie m1=getter.getTaopiaopiaoMovieByMid(s1.getMovieId());
 			
-			finalSession.setHall(s1.getHall());
-			finalSession.setDate(s1.getDate());
-			finalSession.setStartAt(s1.getStartAt());
-			finalSession.setEndAt(s1.getEndAt());
-			finalSession.setMovieId(getter.getFinalMovieByName(m1.getName()).getId()); //movie信息已经集成，通过name获取finalMovie表中的id
+			cinema c1=getCinemaFromTListById(tCinema,s1.getCinemaId());
 			
 			//判断娱票儿中没有
 			for(session s2:ySession){
-				cinema c2 =getter.getYupiaoerCinemaByCid(s2.getCinemaId());
+				cinema c2 =getCinemaFromListById(yCinema,s2.getCinemaId());
 				if(s2.getDate().equals(s1.getDate())&&
 						s2.getStartAt().equals(s1.getStartAt())&&s2.getEndAt().equals(s1.getEndAt())
 						&&s.getSimilarityRatio(c1.getAddress(),c2.getAddress())>0.8){
@@ -150,7 +146,7 @@ public class DataIntegrator {
 			}
 			
 			for(session s3:bSession){
-				cinema c3 =getter.getBaiduCinemaByCid(s3.getCinemaId());
+				cinema c3 =getCinemaFromListById(bCinema,s3.getCinemaId());
 				if(s3.getDate().equals(s1.getDate())&&
 						s3.getStartAt().equals(s1.getStartAt())&&s3.getEndAt().equals(s1.getEndAt())
 						&&s.getSimilarityRatio(c1.getAddress(),c3.getAddress())>0.8){
@@ -159,9 +155,22 @@ public class DataIntegrator {
 							break;
 						}
 			}
-			if(getter.getFinalCinemaByName(c1.getName())==null)
+			
+			movie m1=getMovieFromTListById(tMovie,s1.getMovieId());
+			session finalSession=new session();
+			finalSession.setHall(s1.getHall());
+			finalSession.setDate(s1.getDate());
+			finalSession.setStartAt(s1.getStartAt());
+			finalSession.setEndAt(s1.getEndAt());
+			finalSession.setMovieId(getMovieFromListByName(finalMovie,m1.getName()).getId()); //movie信息已经集成，通过name获取finalMovie表中的id
+			
+			
+			cinema finalCinema=getter.getFinalCinemaByName(c1.getName());
+  			if(finalCinema==null){
 			integrator.addCinema(c1, yHas, tHas, bHas);
-			finalSession.setCinemaId(getter.getFinalCinemaByName(c1.getName()).getId());
+			finalCinema=getter.getFinalCinemaByName(c1.getName());
+  			}
+			finalSession.setCinemaId(finalCinema.getId());
 			integrator.addSession(finalSession, yPrice, tPrice, bPrice);
 		}
 		
@@ -173,19 +182,12 @@ public class DataIntegrator {
 					double yPrice=0;
 					double tPrice=0;
 					double bPrice=s1.getPrice();
-					session finalSession=new session();
-					cinema c1=getter.getBaiduCinemaByCid(s1.getCinemaId());
-					movie m1=getter.getBaiduMovieByMid(s1.getMovieId());
 					
-					finalSession.setHall(s1.getHall());
-					finalSession.setDate(s1.getDate());
-					finalSession.setStartAt(s1.getStartAt());
-					finalSession.setEndAt(s1.getEndAt());
-					finalSession.setMovieId(getter.getFinalMovieByName(m1.getName()).getId()); //movie信息已经集成，通过name获取finalMovie表中的id
+					cinema c1=getCinemaFromListById(bCinema,s1.getCinemaId());
 					
 					//判断娱票儿中没有
 					for(session s2:ySession){
-						cinema c2 = getter.getYupiaoerCinemaByCid(s2.getCinemaId());
+						cinema c2 = getCinemaFromListById(yCinema,s2.getCinemaId());
 						if(s2.getDate().equals(s1.getDate())&&
 								s2.getStartAt().equals(s1.getStartAt())&&s2.getEndAt().equals(s1.getEndAt())
 								&&s.getSimilarityRatio(c1.getAddress(),c2.getAddress())>0.8){
@@ -199,7 +201,7 @@ public class DataIntegrator {
 					}
 					
 					for(session s3:tSession){
-						cinema c3 = getter.getTaopiaopiaoCinemaByCid(s3.getCinemaId());
+						cinema c3 = getCinemaFromTListById(tCinema,s3.getCinemaId());
 						if(s3.getDate().equals(s1.getDate())&&
 								s3.getStartAt().equals(s1.getStartAt())&&s3.getEndAt().equals(s1.getEndAt())
 								&&s.getSimilarityRatio(c1.getAddress(),c3.getAddress())>0.8){
@@ -208,9 +210,20 @@ public class DataIntegrator {
 									break;
 								}
 					}
-					if(getter.getFinalCinemaByName(c1.getName())==null)
+					movie m1=getMovieFromListById(bMovie,s1.getMovieId());
+					session finalSession=new session();
+					finalSession.setHall(s1.getHall());
+					finalSession.setDate(s1.getDate());
+					finalSession.setStartAt(s1.getStartAt());
+					finalSession.setEndAt(s1.getEndAt());
+					finalSession.setMovieId(getMovieFromListByName(finalMovie,m1.getName()).getId()); //movie信息已经集成，通过name获取finalMovie表中的id
+					
+					cinema finalCinema=getter.getFinalCinemaByName(c1.getName());
+		  			if(finalCinema==null){
 					integrator.addCinema(c1, yHas, tHas, bHas);
-					finalSession.setCinemaId(getter.getFinalCinemaByName(c1.getName()).getId());
+					finalCinema=getter.getFinalCinemaByName(c1.getName());
+		  			}
+					finalSession.setCinemaId(finalCinema.getId());
 					integrator.addSession(finalSession, yPrice, tPrice, bPrice);
 				}
 	}
@@ -256,6 +269,47 @@ public class DataIntegrator {
 		return Math.min(Math.min(a, b), Math.min(c, b));
 	}
 	
+	
+	movie getMovieFromListById(List<movie> l,int id){
+		for(movie m:l){
+			if(m.getMovieId()==id){
+				return m;
+			}
+		}
+		return null;
+	}
+
+	movie getMovieFromListByName(List<movie> l,String name){
+		for(movie m:l){
+			if(m.getName().equals(name)){
+				return m;
+			}
+		}
+		return null;
+	}
+	
+	cinema getCinemaFromListById(List<cinema> l,int id){
+		for(cinema c:l){
+			if(c.getCinemaId()==id)
+				return c;
+		}
+		return null;
+	}
+	cinema getCinemaFromTListById(List<cinema> l,int id){
+		for(cinema c:l){
+			if(c.getId()==id)
+				return c;
+		}
+		return null;
+	}
+	movie getMovieFromTListById(List<movie> l,int id){
+		for(movie m:l){
+			if(m.getId()==id){
+				return m;
+			}
+		}
+		return null;
+	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 

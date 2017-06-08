@@ -4,6 +4,10 @@
 <mapper namespace="edu.nju.ar.mapper.dataGetter">
 	
   
+ 	<select id="getAllFinalMovie"  resultType="movie">
+ 		select * from finalMovie
+ 	</select>
+ 	
  	<select id="getAllYupiaoerMovie"  resultType="movie">
  		select * from yupiaoerMovie
  	</select>
