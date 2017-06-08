@@ -26,4 +26,19 @@ public interface dataGetter {
 
 	public List<session> getAllBaiduSession();
 
+	public movie getYupiaoerMovieByMid(int mid);
+	
+	public cinema getYupiaoerCinemaByCid(int cid);
+	
+    public movie getTaopiaopiaoMovieByMid(int mid);
+	
+	public cinema getTaopiaopiaoCinemaByCid(int cid);
+	
+    public movie getBaiduMovieByMid(int mid);
+	
+	public cinema getBaiduCinemaByCid(int cid);
+	
+	public movie getFinalMovieByName(String name);
+	
+	public cinema getFinalCinemaByName(String name);
 }

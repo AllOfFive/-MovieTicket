@@ -10,6 +10,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
+
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -18,28 +20,30 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import edu.nju.ar.model.cinema;
 import edu.nju.ar.model.movie;
 import edu.nju.ar.model.session;
+import edu.nju.ar.tools.FormatPrice;
+import edu.nju.ar.tools.GetDate;
 import edu.nju.ar.tools.MyJavaScriptEngine;
 
 
-
+@Service
 public class ExtractDataFromYupiaoer {
 
 	/**
-	 * »ñÈ¡µçÓ°ÐÅÏ¢
+	 * movie information
 	 * @param url
 	 */
-	public static movie extractMovieInfo(String url) {
+	public movie extractMovieInfo(String url) {
         Document doc = getDoc(url);
         url = url.substring(7);
         String[] urlArr = url.split("/");
         int mid = Integer.parseInt(urlArr[2]);
         movie m = new movie();
-        m.setId(mid);
+        m.setMovieId(mid);
         Elements elements = doc.select("div.basic-info p span.name");
         m.setName(elements.get(0).text());
         elements = doc.select("span.c_cf616a, span.Score");
         String tempScore = elements.get(0).text();
-        int index = tempScore.indexOf("·Ö");
+        int index = tempScore.indexOf("åˆ†");
         if (index==-1){
         	m.setScore(0);
         } else {
@@ -52,37 +56,37 @@ public class ExtractDataFromYupiaoer {
         elements = doc.select("div.basic-info p:eq(4)");
         String temp = elements.get(0).text();
         String[] arr = temp.split(" ");
-        int index2 = arr[2].indexOf("·ÖÖÓ");
+        int index2 = arr[2].indexOf("åˆ†é’Ÿ");
         String lastTime = arr[2].substring(0, index2);
         m.setLast(Integer.parseInt(lastTime));
-        System.out.println(m.getId()+" "+m.getLast()+" "+m.getName()+" "+m.getScore()+" "+m.getType());
+        System.out.println(m.getMovieId()+" "+m.getLast()+" "+m.getName()+" "+m.getScore()+" "+m.getType());
         return m;
 	}
 	
 	/**
-	 * »ñÈ¡µçÓ°ÔºÐÅÏ¢
+	 * cinema information
 	 * @param url
 	 */
-	public static cinema extractCinemaInfo(String url) {
+	public cinema extractCinemaInfo(String url) {
         Document doc = getDoc(url);
         url = url.substring(7);
         String[] arr = url.split("/");
         int cid = Integer.parseInt(arr[2]);
         cinema c = new cinema();
-        c.setId(cid);
+        c.setCinemaId(cid);
         Elements es = doc.select("h3.info-name");
         c.setName(es.get(0).text());
         es = doc.select("p.info-addr");
         c.setAddress(es.get(0).text());
-        System.out.println(c.getId()+" "+c.getName()+" "+c.getAddress());
+        System.out.println(c.getCinemaId()+" "+c.getName()+" "+c.getAddress());
         return c;
 	}
 	
 	/**
-	 * »ñÈ¡Ã¿¸öµçÓ°Ôºµ±ÌìÃ¿¸öµçÓ°µÄÆ±¼ÛÐÅÏ¢
+	 * session information
 	 * @param url
 	 */
-	public static List<session> extractMovieInfoForEachCinema(String url) {
+	public List<session> extractMovieInfoForEachCinema(String url) {
 		Document doc = getDoc(url);
 		List<session> sessions = new ArrayList<>();
         url = url.substring(7);
@@ -93,16 +97,7 @@ public class ExtractDataFromYupiaoer {
 		int mid = Integer.parseInt(tempUrl.substring(index+9));
 		System.out.println(cid);
 		System.out.println(mid);
-        session session = new session();
-        session.setCid(cid);
-        session.setMid(mid);
-        Elements es = doc.select("li.Tabs__item.active");
-        if(es.text()!=null) {
-        	String str  = es.text();
-        	int i = str.indexOf("(");
-        	String sub = str.substring(i+1, str.length()-1);
-        	session.setDate(sub);
-        }
+        
        
 		Elements results1 = doc.select("div.d-start");
 		if(results1.size()==0) return null;
@@ -140,13 +135,14 @@ public class ExtractDataFromYupiaoer {
         } 
         for (Element result5 : results5)  
         {            	
-        	String temp = result5.text();
-        	String regex="[^0-9]";
-        	Pattern pattern = Pattern.compile(regex);
-        	Matcher m = pattern.matcher(temp);   
-        	prices.add( m.replaceAll("").trim());
+        	String price = FormatPrice.formatPrice(result5.text());  
+        	prices.add(price);
         }       
         for (int i=0;i<starts.size();i++) {
+        	session session = new session();
+            session.setCinemaId(cid);
+            session.setMovieId(mid);
+            session.setDate(GetDate.getDateToday());
         	session.setStartAt(starts.get(i));
         	session.setEndAt(ends.get(i));
         	session.setHall(halls.get(i));
@@ -158,18 +154,18 @@ public class ExtractDataFromYupiaoer {
 	}
 	
 	/**
-	 * »ñÈ¡url¶ÔÓ¦µÄdocument
+	 * get document
 	 * @param url
 	 * @return
 	 */
 	private static Document getDoc(String url){
 		WebClient webClient =new WebClient(BrowserVersion.INTERNET_EXPLORER);  
 //		WebClient webClient =new WebClient(BrowserVersion.CHROME); 
-		 webClient.getCookieManager().setCookiesEnabled(true);// ¿ªÆôcookie¹ÜÀí
-	       webClient.getOptions().setJavaScriptEnabled(true); //ÆôÓÃJS½âÊÍÆ÷£¬Ä¬ÈÏÎªtrue    
-	       webClient.getOptions().setCssEnabled(false); //½ûÓÃcssÖ§³Ö        
-	       webClient.getOptions().setThrowExceptionOnScriptError(false); //jsÔËÐÐ´íÎóÊ±£¬ÊÇ·ñÅ×³öÒì³£     
-	       webClient.setJavaScriptEngine(new MyJavaScriptEngine(webClient));//×Ô¶¨ÒåJavaScriptÒýÇæ£¬ÓÐjs´íÎó²»´òÓ¡
+		 webClient.getCookieManager().setCookiesEnabled(true);
+	       webClient.getOptions().setJavaScriptEnabled(true);     
+	       webClient.getOptions().setCssEnabled(false);     
+	       webClient.getOptions().setThrowExceptionOnScriptError(false); 
+	       webClient.setJavaScriptEngine(new MyJavaScriptEngine(webClient));
 	       webClient.getOptions().setTimeout(20000);        
 
 				HtmlPage page=null;
@@ -185,15 +181,15 @@ public class ExtractDataFromYupiaoer {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}    
-				//ÎÒÈÏÎªÕâ¸ö×îÖØÒª  
-				       String pageXml = page.asXml(); //ÒÔxmlµÄÐÎÊ½»ñÈ¡ÏìÓ¦ÎÄ±¾    
-				/**jsoup½âÎöÎÄµµ*/    
+				//ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òª  
+				       String pageXml = page.asXml(); //ï¿½ï¿½xmlï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½È¡ï¿½ï¿½Ó¦ï¿½Ä±ï¿½    
+				/**jsoupï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½*/    
 			    Document doc = Jsoup.parse(pageXml, url); 
 			    return doc;
 	}
 
 	public static void main(String[] args) {
-		extractMovieInfoForEachCinema("http://m.wepiao.com/cinemas/1011371?movieId=50205");
+//		extractMovieInfoForEachCinema("http://m.wepiao.com/cinemas/1011371?movieId=50205");
 //		extractMovieInfo("http://m.wepiao.com/movies/50205");
 //		extractCinemaInfo("http://m.wepiao.com/cinemas/1010147");
 	}

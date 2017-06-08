@@ -7,18 +7,18 @@
  <!-- 增加电影信息 -->  
     <insert id="InsertMovie" parameterType="movie" 
         useGeneratedKeys="true" keyProperty="id"> 
-        insert into baiduMovie(name,type,last,score) values(#{name},#{type},#{last},#{score})
+        insert into baiduMovie(movieId,name,type,last,score) values(#{movieId},#{name},#{type},#{last},#{score})
      </insert>
      
  <!-- 增加电影院信息 -->  
     <insert id="InsertCinema" parameterType="cinema" 
         useGeneratedKeys="true" keyProperty="id"> 
-        insert into baiduCinema(name,address) values(#{name},#{address})
+        insert into baiduCinema(cinemaId,name,address) values(#{cinemaId},#{name},#{address})
      </insert>
      
  <!-- 增加场次信息 -->
  <insert id="InsertSession" parameterType="session"
        useGeneratedKeys="true" keyProperty="id">
-       insert into baiduSession(movieId,CinemaId,hall,date,startAt,endAt) values(#{mid}，#{cid},#{hall},#{date},#{startAt},#{endAt})
+       insert into baiduSession(movieId,CinemaId,hall,date,startAt,endAt,price) values(#{movieId},#{cinemaId},#{hall},#{date},#{startAt},#{endAt},#{price})
        </insert>
 </mapper>

@@ -6,12 +6,13 @@ import java.util.List;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import edu.nju.ar.model.Rule;
 import edu.nju.ar.model.UrlVO;
 
 
-
+@Service
 public class NuoMiSpider {
 
 	private static final String BASE_URL="http://dianying.nuomi.com";
@@ -57,7 +58,7 @@ public class NuoMiSpider {
 			for(Element data:results){
 				if(data.attr("data-movie-id").length()==0)
 					continue;
-				String url="https://mdianying.baidu.com/cinema/detail?cinemaId="+cinemaId+"&movieId="+data.attr("data-movie-id");
+				String url="https://mdianying.baidu.com/cinema/detail?cinemaId="+cinemaId+"&active_movie_id="+data.attr("data-movie-id");
 				urls.add(url);
 				System.out.println(url);
 			}
@@ -69,7 +70,7 @@ public class NuoMiSpider {
 	}
 	
 	/**
-	 * 获取所有电影id
+	 * 锟斤拷取锟斤拷锟叫碉拷影id
 	 * @return
 	 */
 	private List<String> getCinemasId(){
@@ -91,17 +92,17 @@ public class NuoMiSpider {
 		
 		List<String> urls=new ArrayList<String>();	
 		for(String cinemaId:cinemasId){
-			urls.add(BASE_URL+CINEMA_INFO_URL_PATH+cinemaId);
+			urls.add("https://mdianying.baidu.com/cinema/detail?cinemaId="+cinemaId);
 		}
 		return urls;
 	}
 	
 	/**
-	 * 从首页爬取电影id
+	 * 锟斤拷锟斤拷页锟斤拷取锟斤拷影id
 	 * @return
 	 */
 	private List<String> getMoviesId(){
-		//获取电影的url
+		//锟斤拷取锟斤拷影锟斤拷url
 		Rule rule=new Rule(BASE_URL+INDEX_URL_PATH, null, null, MOVIE_CSS_PATH, Rule.SELECTION, Rule.GET);
 		ExtractDataService tool=new ExtractDataService();
 		Elements results=tool.getElements(rule);
@@ -119,14 +120,14 @@ public class NuoMiSpider {
 	}
 	
 	/**
-	 * 根据id获取电影信息url
+	 * 锟斤拷锟斤拷id锟斤拷取锟斤拷影锟斤拷息url
 	 * @param moviesId
 	 * @return
 	 */
 	private List<String> getMovieInfoUrl(List<String> moviesId){
 		List<String> urls=new ArrayList<String>();	
 		for(String movieId:moviesId){
-			urls.add(BASE_URL+MOVIE_INFO_URL_PATH+movieId);
+			urls.add("https://mdianying.baidu.com/movie/detail?movieId="+movieId);
 		}
 		return urls;
 	}

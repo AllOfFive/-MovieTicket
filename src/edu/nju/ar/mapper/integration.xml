@@ -5,19 +5,19 @@
 
  	
  <!-- 增加电影信息 -->  
-    <insert id="addMovie" useGeneratedKeys="true" keyProperty="id"> 
+    <insert id="addMovie" useGeneratedKeys="true"> 
         insert into finalMovie(name,type,last,minScore,maxScore,averageScore) 
         values(#{movie.name},#{movie.type},#{movie.last},#{minScore},#{maxScore},#{avgScore})
      </insert>
      
-      <insert id="addCinema" useGeneratedKeys="true" keyProperty="id"> 
+      <insert id="addCinema" useGeneratedKeys="true"> 
         insert into finalCinema(name,address,yupiaoerHas,taopiaopiaoHas,baiduHas) 
         values(#{cinema.name},#{cinema.address},#{yHas},#{tHas},#{bHas})
      </insert>
      
-         <insert id="addSession" useGeneratedKeys="true" keyProperty="id"> 
+         <insert id="addSession" useGeneratedKeys="true"> 
         insert into finalSession(movieId,cinemaId,hall,date,startAt,endAt,yPrice,tPrice,bPrice) 
-        values(#{session.mid},#{session.cid},#{session.hall},#{session.date},#{session.startAt},#{session.endAt},
-        #{yPrice},#{tPrcie},#{bPrice})
+        values(#{session.movieId},#{session.cinemaId},#{session.hall},#{session.date},#{session.startAt},#{session.endAt},
+        #{yPrice},#{tPrice},#{bPrice})
      </insert>
      </mapper>

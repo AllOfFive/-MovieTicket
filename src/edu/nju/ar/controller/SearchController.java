@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.nju.ar.model.movie;
 import edu.nju.ar.model.session;
-import edu.nju.ar.service.SearchService;
+//import edu.nju.ar.service.SearchService;
 
 @Controller
 public class SearchController {
 	
-	@Autowired
-	private SearchService searchService;
+//	@Autowired
+//	private SearchService searchService;
 	
 	
 	@RequestMapping("/searchMoive")
