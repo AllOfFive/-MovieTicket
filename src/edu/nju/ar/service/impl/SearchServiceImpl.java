@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import edu.nju.ar.mapper.UserMapper;
 import edu.nju.ar.model.User;
-import edu.nju.ar.service.UserService;
+import edu.nju.ar.service.SearchService;
 @Service
 @Transactional
-public class UserServiceImpl implements UserService{
+public class SearchServiceImpl implements SearchService{
 	@Resource
 	public UserMapper userMapper;
 	
@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public boolean register(String name, String password) {
 		if(userMapper.selectUserByName(name)==null){
-			//Íê³É×¢²á
+			//ï¿½ï¿½ï¿½×¢ï¿½ï¿½
 			User user=new User();
 			user.setName(name);
 			user.setPassword(password);
