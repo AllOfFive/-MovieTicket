@@ -20,7 +20,7 @@ public class Main {
 //		di.insertMovieForYupiaoer();
 //		di.insertCinemaForYupiaoer();
 		
-		di.insertSessionForNuoMi();
+//		di.insertSessionForNuoMi();
 		di.insertSessionForYupiaoer();
 		di.insertMovieForNuoMi();
 //		di.insertCinemaForNuoMi();

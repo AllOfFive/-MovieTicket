@@ -107,13 +107,14 @@ public class ExtractDataForNumMi {
 		Elements results3 = doc.select(active+"div.lan");
 		Elements results4 = doc.select(active+"div.theater");
 		Elements results5 = doc.select(active+"div.price");
-		Elements results6 = doc.select(active+"div.price s");
+		Elements results6 = doc.select(active+"div.price-info s");
 		ArrayList<String> starts = new ArrayList<>();
 		ArrayList<String> ends = new ArrayList<>();
 		ArrayList<String> props = new ArrayList<>();
 		ArrayList<String> halls = new ArrayList<>();
 		ArrayList<String> prices = new ArrayList<>();
 		ArrayList<String> rubs = new ArrayList<>();
+		
         for (Element result1 : results1)  
         {            	
         	String temp = result1.text().replace(Jsoup.parse("&nbsp;").text(), "");
@@ -157,9 +158,16 @@ public class ExtractDataForNumMi {
         	session.setEndAt(ends.get(i));
         	session.setHall(halls.get(i));
         	if(rubs.size()!=0&&rubs.get(i)!=null&&rubs.get(i).length()!=0){
+        		
         		int priceLength=prices.get(i).length()-rubs.get(i).length();
-        		double truePrice = Double.parseDouble(prices.get(i).substring(0,priceLength));
-        		session.setPrice(truePrice);
+        		if(priceLength<=0){
+        			session.setPrice(Double.parseDouble(prices.get(i)));
+        			
+        		}else{
+        			double truePrice = Double.parseDouble(prices.get(i).substring(0,priceLength));
+            		session.setPrice(truePrice);
+        		}
+        		
         	}else {
         		session.setPrice(Double.parseDouble(prices.get(i)));
         	}
@@ -206,7 +214,7 @@ public class ExtractDataForNumMi {
 
 	public static void main(String[] args) {
 		ExtractDataForNumMi e = new ExtractDataForNumMi();
-		e.extractMovieInfoForEachCinema("https://mdianying.baidu.com/cinema/detail?cinemaId=3944&active_movie_id=15546");
+		e.extractMovieInfoForEachCinema("https://mdianying.baidu.com/cinema/detail?cinemaId=3069&active_movie_id=15546");
 //		extractMovieInfo("https://mdianying.baidu.com/movie/detail?movieId=15546");
 //		extractCinemaInfo("https://mdianying.baidu.com/cinema/detail?cinemaId=179");
 	}
