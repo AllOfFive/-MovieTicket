@@ -1,5 +1,6 @@
 package edu.nju.ar.service.impl;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -162,6 +163,9 @@ public class DataIntegrator {
 			finalSession.setDate(s1.getDate());
 			finalSession.setStartAt(s1.getStartAt());
 			finalSession.setEndAt(s1.getEndAt());
+			if(getMovieFromListByName(finalMovie,m1.getName())==null)
+				break;
+			else
 			finalSession.setMovieId(getMovieFromListByName(finalMovie,m1.getName()).getId()); //movie信息已经集成，通过name获取finalMovie表中的id
 			
 			
@@ -216,6 +220,9 @@ public class DataIntegrator {
 					finalSession.setDate(s1.getDate());
 					finalSession.setStartAt(s1.getStartAt());
 					finalSession.setEndAt(s1.getEndAt());
+					if(getMovieFromListByName(finalMovie,m1.getName())==null)
+						break;
+					else
 					finalSession.setMovieId(getMovieFromListByName(finalMovie,m1.getName()).getId()); //movie信息已经集成，通过name获取finalMovie表中的id
 					
 					cinema finalCinema=getter.getFinalCinemaByName(c1.getName());
@@ -229,6 +236,7 @@ public class DataIntegrator {
 	}
 	
 	public double getAverageScore(double a,double b ,double c){
+		DecimalFormat df =new DecimalFormat("#.00");
 		double sum=a+b+c;
 		int count=3;
 		if(a==0)
@@ -238,7 +246,7 @@ public class DataIntegrator {
 		if(c==0)
 			count--;
 		if(count!=0)
-			return sum/count;
+			return Double.parseDouble(df.format(sum/count));
 		else
 		    return 0;
 	}
