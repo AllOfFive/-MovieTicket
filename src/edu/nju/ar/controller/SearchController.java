@@ -73,6 +73,8 @@ public class SearchController {
 		List<Detail> detail=new ArrayList<>();
 		detail=searchService.getDetail(mid,cid);
 		session.setAttribute("detail", detail);
+		if(!detail.isEmpty())
+			session.setAttribute("today", detail.get(0).getDate());
 		return "detail";
 		
 	}

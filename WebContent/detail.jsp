@@ -61,7 +61,7 @@
 <span style="float:right">${cinemaDetail.address }</span>
 
 <table style="margin-top:40px;text-align:left" class="table table-striped table-hover">
-    <caption ></caption>
+    <caption id="movieDate">${today}</caption>
     <thead>
       <tr>
         <th>影厅</th>
